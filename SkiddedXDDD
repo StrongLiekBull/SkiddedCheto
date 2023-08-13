@@ -1,0 +1,24 @@
+script_key = 'vLWEgLJiTfqPrWVPLyXhFtopqmJEAyok'
+local success, response = pcall(game.HttpGet, game, 'https://api.cheetohub.com/scripts/script-loader.lua')
+wait();
+ 
+if response == "Forbidden" then
+    game.Players.LocalPlayer:Kick("Please report this to slixx: FORBIDDEN")
+end
+if not success or tostring(response):find("return error") == nil then
+    warn(tostring(response))
+    return game.Players.LocalPlayer:Kick("Error when fetching script. Info: " .. tostring(response))
+end
+ 
+local loaded, chunk = pcall(loadstring, response)
+ 
+if loaded and type(chunk) == "function" then
+    local s, e = pcall(chunk)
+ 
+    if not s and e ~= "Cheeto can only be executed once." then
+        return game.Players.LocalPlayer:Kick("Error while executing the script, info: " .. tostring(e) .. " | Please report this to slixx.")
+    end
+else
+    game.Players.LocalPlayer:Kick("Error while loading the script, info: " .. tostring(loaded) .. " "  .. tostring(chunk))
+    warn("Error while executing the script, info: " .. tostring(loaded) .. " "  .. tostring(chunk))
+end
